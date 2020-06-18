@@ -14,8 +14,6 @@ import collections
 # List to hold lines from raw fasta file 
 DNAStringMatrix = []
 
-###########################3
-
 # Open and parse input file
 with open(sys.argv[1]) as f:
     lines = [item.strip() for item in f.readlines() if not item == '']
@@ -26,7 +24,7 @@ with open(sys.argv[1]) as f:
             # If sequences in temp when new ID reached add sequences to main 
             # list and empty tempList 
             if not len(tempList) == 0:
-                DNAStringMatrix.append([','.join(tempList[1:])])
+                DNAStringMatrix.append(tempList[1:]) # Append everything but the ID
                 tempList = [line,] # Empty List, Add new ID to it 
             # Add seq ID to list if it's the first sequence ID
             else:
@@ -40,27 +38,11 @@ with open(sys.argv[1]) as f:
                     tempList.append(char)
     # Handles sequence for last ID
     else:
-        DNAStringMatrix.append([','.join(tempList[1:])])
-"""
-with open(sys.argv[1]) as f:
-    for line in f.readlines():
-        if ">" in line:
-            continue # Skip ID lines 
-        else:
-            string= [] # Temp list to hold bases from single line
-            for char in line:
-                if char == "\n":
-                    continue # Don't include newline characters 
-                string.append(char) # Add bases to string list
-            DNAStringMatrix.append(string) # Append sequence to main list as a list 
-"""
+        DNAStringMatrix.append(tempList[1:]) # Append everything but the ID
 
-print(DNAStringMatrix)
 DNAStringArray = np.array(DNAStringMatrix) # Convert to numpy array 
 DNAStringArray = np.transpose(DNAStringMatrix) # Transpose array so we can iterate down columns to find row[i] for each sequence 
-print(DNAStringArray)
 
-#############################################################3
 
 basePosCount = {'A': [], 'C': [], 'G': [], 'T': []} # Dict to hold number of instances of a base at each position
 consensusSeq = '' # Empty string to hold consensus sequence 
